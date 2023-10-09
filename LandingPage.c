@@ -2,10 +2,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <ncurses.h>
+#include <wchar.h>
 
 void printCentered(WINDOW *win, char* text);
 void logoWinCreation(uint16_t stdscrRows, uint16_t stdscrColumns);
 void menuWinCreation(uint16_t stdscrRows, uint16_t stdscrColumns);
+
 int main()
 {
   initscr();
@@ -27,13 +29,13 @@ int main()
   getmaxyx(stdscr, stdscrRows, stdscrColumns);
 
   logoWinCreation(stdscrRows, stdscrColumns);
-  
+   
   menuWinCreation(stdscrRows, stdscrColumns);
 }
 
 void menuWinCreation(uint16_t stdscrRows, uint16_t stdscrColumns)
 {
-  WINDOW* menuWin1 = newwin(stdscrRows/7, stdscrColumns/1.5, stdscrRows/2, (stdscrColumns/6));
+  WINDOW* menuWin1 = newwin(stdscrRows/8, stdscrColumns/1.5, stdscrRows/2, (stdscrColumns/6));
   wbkgd(menuWin1, COLOR_PAIR(1));
   int ch = wgetch(menuWin1);
   while(ch)
@@ -53,12 +55,12 @@ void logoWinCreation(uint16_t stdscrRows, uint16_t stdscrColumns)
   char title[30] = "Horashio Banking Sytem - HBS";
 
   printCentered(logoWin, title);
-
-  //int ch = wgetch(logoWin);
-  //while(ch)
-  //{
+  wrefresh(logoWin);
+  /*int ch = wgetch(logoWin);
+  while(ch)
+  {
   
-  //}
+  }*/
 }
 
 void printCentered(WINDOW *win, char* text)
