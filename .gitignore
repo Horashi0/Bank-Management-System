@@ -1,0 +1,18 @@
+# Whitelisting mode
+*
+!*/
+
+
+# Whitelist
+!Makefile
+!.gitignore
+!*.h
+!*.c
+!*.hpp
+!*.cpp
+!*.md
+
+
+# Explicit blacklist
+bin
+obj
