@@ -5,8 +5,9 @@ DIR_BIN = bin
 EXE_NAME = bank
 
 
-# Tools
+# Compilation options
 CC = gcc
+CFLAGS = -fPIC
 
 
 
@@ -33,4 +34,4 @@ clean:
 
 $(DIR_BIN)/$(EXE_NAME): LandingPage.c
 	@mkdir -vp '$(dir $(@))'
-	$(CC) -o '$(@)' $(CFLAGS) $(^) -lncurses
+	$(CC) -o '$(@)' -fPIE $(CFLAGS) $(^) -lncurses
