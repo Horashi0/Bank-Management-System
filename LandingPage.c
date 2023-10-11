@@ -4,14 +4,18 @@
 #include <string.h>
 #include <ncurses.h>
 #include <wchar.h>
+#include <signal.h>
+
+#define SIGNWINCH 28
 
 void printCentered(WINDOW *win, const char* text);
 void logoWinCreation(uint16_t stdscrRows, uint16_t stdscrColumns);
 void menuWinCreation(uint16_t screenHeight, uint16_t screenWidth);
-
+void resize(int sig);
 int main()
 {
   initscr();
+  refresh();
   cbreak();
   noecho();
 
@@ -25,7 +29,7 @@ int main()
 
   // Pair 1, Foreground white, Background blue
   init_pair(1, COLOR_WHITE, COLOR_BLUE);
-  
+  init_pair(2, COLOR_BLUE, COLOR_WHITE);
   uint16_t stdscrRows, stdscrColumns;
   getmaxyx(stdscr, stdscrRows, stdscrColumns);
 
@@ -76,12 +80,48 @@ void menuWinCreation(uint16_t screenHeight, uint16_t screenWidth)
   printCentered(menuWin4, menuTitles[3]);
   wrefresh(menuWin4);
   
-  int ch = wgetch(menuWin4);
-  while(ch)
+  WINDOW *wndCopy = NULL;
+  while(1)
   {
-
-  }
+    int ch = wgetch(stdscr); 
+    //signal(SIGWINCH, resize;
+    if(ch == KEY_RESIZE)
+    {
+      endwin();
+      clear();
+      refresh();
+      main();
+    }
+    WINDOW *wnd = NULL;
+    switch (ch) {
+        case '1':
+            wrefresh(wndCopy);
+            wnd = menuWin1;
+            break;
+        case '2':
+            wrefresh(wndCopy);
+            wnd = menuWin2;
+            break;
+        case '3':
+            wrefresh(wndCopy);
+            wnd = menuWin3;
+            break;
+        case '4':
+            wrefresh(wndCopy);
+            wnd = menuWin4;
+            break;
+        default:
+            break;
+    }    
+    if (wnd != NULL) {
+        wbkgd(wnd, COLOR_PAIR(2));
+        wrefresh(wnd);
+        wbkgd(wnd, COLOR_PAIR(1));
+        wndCopy = wnd;
+    }
 }
+}
+
 
 void logoWinCreation(uint16_t stdscrRows, uint16_t stdscrColumns)
 {
@@ -106,11 +146,7 @@ void printCentered(WINDOW *win, const char* text)
   centerColumn = winColumns / 2;
   centerRow = winRows / 2;
   halfLength = length / 2;
-  if(halfLength % 2 != 0)
-  {
-    halfLength++;
-  }
+  
   adjustedColumn = centerColumn - halfLength;
-
   mvwprintw(win, centerRow, adjustedColumn, text);   
-}
+} 
